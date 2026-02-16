@@ -1,0 +1,11 @@
+[
+  {
+    "service": "Checkout",
+    "root_cause": "The high error rate in the Checkout service is caused by database connection pool exhaustion, leading to failed queries and service downtime.",
+    "successful_actions": [
+      "Investigate and optimize slow database queries to reduce connection hold time.",
+      "Implement connection pool monitoring and alerting to detect exhaustion early.",
+      "Consider adding database replicas to distribute load if applicable."
+    ]
+  }
+]
