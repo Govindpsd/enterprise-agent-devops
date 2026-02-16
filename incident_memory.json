@@ -7,5 +7,15 @@
       "Implement connection pool monitoring and alerting to detect exhaustion early.",
       "Consider adding database replicas to distribute load if applicable."
     ]
+  },
+  {
+    "service": "Checkout",
+    "root_cause": "The high error rate in the Checkout service is caused by database connectivity issues or query timeouts leading to failed order transactions.",
+    "successful_actions": [
+      "Investigate database connectivity logs for connection failures or timeouts.",
+      "Review and optimize slow queries related to the Checkout service.",
+      "Restart database connections or services if necessary to restore connectivity.",
+      "Implement monitoring and alerting for database connectivity and query performance."
+    ]
   }
 ]
