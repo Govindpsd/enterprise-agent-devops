@@ -17,5 +17,15 @@
       "Restart database connections or services if necessary to restore connectivity.",
       "Implement monitoring and alerting for database connectivity and query performance."
     ]
+  },
+  {
+    "service": "Concur",
+    "root_cause": "A critical infrastructure component failure, such as a network partition or a database outage, caused the Concur service to become unavailable.",
+    "successful_actions": [
+      "Immediately initiate failover procedures to backup infrastructure components.",
+      "Engage network and database teams to diagnose and resolve the partition or outage.",
+      "Communicate status updates to stakeholders and affected users regularly.",
+      "Perform a post-incident review to identify root causes and prevent recurrence."
+    ]
   }
 ]

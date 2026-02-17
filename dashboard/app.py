@@ -1,17 +1,19 @@
-import sys
-import os
-import streamlit as st
-import json
+# dashboard/app.py
 
-# Allow dashboard to import orchestrator
+import os
+import sys
+import json
+import streamlit as st
+
+# Fix import path so orchestrator module works
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from orchestrator.pipeline import run_incident_pipeline
 
 
-# ------------------------------------
+# ---------------------------
 # Page Config
-# ------------------------------------
+# ---------------------------
 st.set_page_config(
     page_title="Autonomous AI DevOps Control Center",
     layout="wide"
@@ -19,148 +21,125 @@ st.set_page_config(
 
 st.title("🚀 Autonomous AI DevOps Control Center")
 
-st.markdown("AI-powered multi-agent autonomous incident response system")
+st.markdown("---")
 
-st.divider()
 
-# ------------------------------------
+# ---------------------------
 # Incident Input
-# ------------------------------------
-st.subheader("📝 Enter Incident Description")
-
-user_input = st.text_area(
-    "",
-    "Checkout service is down. Error rate is 75%. Customers cannot place orders.",
-    height=120
+# ---------------------------
+incident_text = st.text_area(
+    "Enter Incident Description",
+    value="Checkout service is down. Error rate is 75%. Customers cannot place orders.",
+    height=120,
+    key="incident_input"
 )
 
-# ------------------------------------
+run_button = st.button(
+    "Run Incident Pipeline",
+    key="run_pipeline_button"
+)
+
+
+# ---------------------------
 # Run Pipeline
-# ------------------------------------
-if st.button("Run Incident Pipeline"):
+# ---------------------------
+if run_button:
 
-    st.markdown("## 🚨 Running Autonomous Incident Pipeline...")
-    results = run_incident_pipeline(user_input)
+    with st.spinner("Running Autonomous Incident Pipeline..."):
+        results = run_incident_pipeline(incident_text)
 
-    st.divider()
+    st.success("Incident Pipeline Completed")
 
-    # ============================================
-    # 🔎 INCIDENT CLASSIFICATION
-    # ============================================
-    st.subheader("🔎 Incident Classification")
-    st.json(results.get("incident", {}))
+    st.markdown("---")
 
-    # ============================================
-    # 🧠 ROOT CAUSE DEBATE
-    # ============================================
-    st.divider()
-    st.subheader("🧠 Multi-Agent Root Cause Debate")
-
-    debate = results.get("debate", [])
-
-    if debate:
-        cols = st.columns(len(debate))
-
-        for i, hypothesis in enumerate(debate):
-            with cols[i]:
-                st.markdown(f"### Hypothesis {i+1}")
-                st.markdown(f"**Confidence:** {hypothesis.get('confidence', 0)}")
-                st.markdown(f"**Root Cause:**")
-                st.info(hypothesis.get("root_cause", ""))
-
-                st.markdown("**Evidence:**")
-                for ev in hypothesis.get("evidence", []):
-                    st.write("-", ev)
-    else:
-        st.info("No debate hypotheses available.")
-
-    # ============================================
-    # ⚙️ ACTION PLAN
-    # ============================================
-    st.divider()
-    st.subheader("⚙️ Action Plan")
-    st.json(results.get("actions", {}))
-
-    # ============================================
-    # 🛠 REMEDIATION EXECUTION
-    # ============================================
-    st.divider()
-    st.subheader("🛠 Remediation Execution")
-
-    remediation = results.get("remediation", [])
-
-    for step in remediation:
-        if step["status"] == "SUCCESS":
-            st.success(f"✅ {step['action']}")
-        else:
-            st.error(f"❌ {step['action']}")
-
-    # ============================================
-    # 📊 HEALTH STATUS
-    # ============================================
-    st.divider()
+    # ==========================================
+    # 📊 SYSTEM HEALTH
+    # ==========================================
     st.subheader("📊 System Health")
 
     health = results.get("health", {})
     error_rate = health.get("error_rate", 0)
+    status = health.get("status", "UNKNOWN")
 
     st.progress(min(error_rate / 100, 1.0))
 
-    if error_rate < 30:
-        st.success(f"Healthy — Error Rate: {error_rate}%")
-    elif error_rate < 70:
+    if status == "STABLE":
+        st.success(f"Stable — Error Rate: {error_rate}%")
+    elif status == "DEGRADED":
         st.warning(f"Degraded — Error Rate: {error_rate}%")
     else:
-        st.error(f"Critical — Error Rate: {error_rate}%")
+        st.error(f"Unstable — Error Rate: {error_rate}%")
 
-    # ============================================
+    st.markdown("---")
+
+    # ==========================================
     # 🧠 DECISION ENGINE
-    # ============================================
-    st.divider()
+    # ==========================================
     st.subheader("🧠 Decision Engine")
 
-    decision = results.get("decision")
+    decision = results.get("decision", "UNKNOWN")
 
     if decision == "RESOLVED":
-        st.success("🎯 Final Decision: RESOLVED")
+        st.success("✅ Final Decision: RESOLVED")
     elif decision == "RETRY":
         st.warning("🔁 Final Decision: RETRY")
     elif decision == "ESCALATE":
         st.error("🚨 Final Decision: ESCALATE TO JIRA")
     else:
-        st.info("No decision returned.")
+        st.info(f"Decision: {decision}")
 
-    # ============================================
+    st.markdown("---")
+
+    # ==========================================
+    # 🧩 MULTI-AGENT DEBATE
+    # ==========================================
+    st.subheader("🧩 Multi-Agent Root Cause Debate")
+
+    debate = results.get("debate", [])
+
+    if debate:
+        for i, hypothesis in enumerate(debate):
+            with st.expander(f"Hypothesis {i+1}: {hypothesis.get('root_cause', 'Unknown')}"):
+                st.write("Confidence:", hypothesis.get("confidence", "N/A"))
+                st.write("Evidence:")
+                for ev in hypothesis.get("evidence", []):
+                    st.write("•", ev)
+    else:
+        st.info("No debate data available.")
+
+    st.markdown("---")
+
+    # ==========================================
     # 🧠 LEARNING MEMORY
-    # ============================================
-    st.divider()
+    # ==========================================
     st.subheader("🧠 Learning Memory")
 
-    memory = results.get("memory")
+    memory = results.get("memory", [])
 
     if memory:
-        st.write("**Similar Incidents Seen:**", memory.get("similar_count", 0))
-        st.write("**Best Historical Action:**", memory.get("best_action", "N/A"))
+        for entry in memory[-5:]:
+            with st.expander(f"{entry.get('service')} — {entry.get('decision')}"):
+                st.json(entry)
     else:
         st.info("No historical learning data available yet.")
 
-    # ============================================
-    # 🚨 JIRA ESCALATION
-    # ============================================
-    st.divider()
-    st.subheader("🚨 Jira Escalation")
+    st.markdown("---")
+
+    # ==========================================
+    # 🎫 JIRA ESCALATION
+    # ==========================================
+    st.subheader("🎫 Jira Escalation")
 
     jira = results.get("jira")
 
     if jira:
-        if jira.get("error"):
-            st.error("Jira ticket creation failed.")
-            st.json(jira)
-        else:
-            st.success(f"Issue Created: {jira.get('key')}")
+        if jira.get("key"):
+            st.success(f"Issue Created: {jira['key']}")
             st.write(jira.get("self"))
+        elif jira.get("error"):
+            st.error("Jira Escalation Failed")
+            st.write(jira.get("message"))
+        else:
+            st.info("No Jira escalation needed.")
     else:
-        st.info("No escalation required.")
-
-    st.divider()
-    st.success("🏁 Incident Pipeline Completed")
+        st.info("No Jira action taken.")
