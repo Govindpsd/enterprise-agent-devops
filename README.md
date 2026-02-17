@@ -109,7 +109,7 @@ Reducing:
 - Identifies impacted service
 - Outputs structured JSON
 
-Example Output:
+## 🧠 Example Classification Output
 
 ```json
 {
@@ -117,135 +117,134 @@ Example Output:
   "service": "Checkout",
   "confidence": 0.95
 }
-2️⃣ Root Cause Agent
+```
 
-Analyzes symptoms
+---
 
-Produces hypothesis
+## 2️⃣ Root Cause Agent
 
-Provides evidence list
+**Responsibilities**
 
-Returns confidence score
+- Analyzes symptoms  
+- Produces hypothesis  
+- Provides evidence list  
+- Returns confidence score  
 
-3️⃣ Action Planning Agent
+---
 
-Generates remediation plan
+## 3️⃣ Action Planning Agent
 
-Prioritizes actions
+**Responsibilities**
 
-Structured output
+- Generates remediation plan  
+- Prioritizes actions  
+- Produces structured output  
 
-4️⃣ Remediation Engine
+---
 
-Simulates:
+## 4️⃣ Remediation Engine
 
-Action execution
+**Simulates**
 
-Success/failure rate
+- Action execution  
+- Success / failure rate  
+- Remediation effectiveness  
 
-Remediation effectiveness
+---
 
-5️⃣ Health Validation Agent
+## 5️⃣ Health Validation Agent
 
-Simulates:
+**Simulates**
 
-Error rate evaluation
+- Error rate evaluation  
 
-System state:
+**System States**
 
-STABLE
+- `STABLE`
+- `UNSTABLE`
 
-UNSTABLE
+---
 
-6️⃣ Decision Engine (Governance Layer)
+## 6️⃣ Decision Engine (Governance Layer)
 
-Evaluates:
+**Evaluates**
 
-Incident severity
+- Incident severity  
+- Agent confidence  
+- Remediation success rate  
+- Current error rate  
+- Attempt number  
 
-Agent confidence
+**Outputs**
 
-Remediation success rate
+- `APPROVE`
+- `RETRY`
+- `ESCALATE`
 
-Current error rate
+---
 
-Attempt number
+## 7️⃣ Jira Integration (Real API)
 
-Outputs
+If the system remains unstable:
 
-APPROVE
-RETRY
-ESCALATE
+- AI generates structured Jira payload  
+- Real Jira REST API call  
+- Ticket automatically created  
 
-7️⃣ Jira Integration (Real API)
+**Ticket Includes**
 
-If system remains unstable:
+- Title  
+- Priority  
+- Root cause  
+- Recommended actions  
 
-AI generates Jira payload
+> This is NOT mocked. It uses a real Jira REST integration.
 
-Real Jira REST API call
+---
 
-Ticket includes:
+## 8️⃣ Learning Memory Engine
 
-Title
+**Stores**
 
-Priority
+- Service  
+- Root cause  
+- Remediation success  
+- Timestamp  
 
-Root cause
+**Current Stage**
 
-Recommended actions
+- Passive memory logging  
 
-This is NOT mocked.
+**Future Evolution**
 
-8️⃣ Learning Memory Engine
+- Pattern detection  
+- Confidence tuning  
+- Reinforcement-style learning  
 
-Stores:
+---
 
-Service
-
-Root cause
-
-Remediation success
-
-Timestamp
-
-Current stage:
-
-Passive memory logging
-
-Future:
-
-Pattern detection
-
-Confidence tuning
-
-Reinforcement-style learning
-
-🖥️ Dashboard (Streamlit)
+## 🖥️ Dashboard (Streamlit)
 
 The dashboard visualizes:
 
-Incident classification
+- Incident classification  
+- Root cause reasoning  
+- Action plan  
+- Remediation results  
+- Health state  
+- Decision verdict  
+- Jira escalation result  
+- Memory history  
 
-Root cause reasoning
+It shows a visible decision loop — not just logs.
 
-Action plan
+---
 
-Remediation results
+## 🔬 Orchestration Logic
 
-Health state
+### Core Lifecycle
 
-Decision verdict
-
-Jira escalation result
-
-Memory history
-
-It shows a visible decision loop, not just logs.
-
-🔬 Orchestration Logic
-
-Core lifecycle:
+```
 Incident
    ↓
 Reason
@@ -261,8 +260,13 @@ Decide
 Escalate (if needed)
    ↓
 Learn
+```
 
-📂 Project Structure
+---
+
+## 📂 Project Structure
+
+```
 enterprise-agent-devops/
 │
 ├── orchestrator/
@@ -288,33 +292,26 @@ enterprise-agent-devops/
 │   └── app.py
 │
 └── README.md
+```
 
+---
 
-⚙️ Tech Stack
+## ⚙️ Tech Stack
 
-Python
+- Python  
+- SAP AI Core (LLM deployment)  
+- Streamlit  
+- Jira REST API  
+- Modular Agent Architecture  
+- Structured JSON prompting  
 
-SAP AI Core (LLM deployment)
+---
 
-Streamlit
+## 🔮 Future Roadmap
 
-Jira REST API
-
-Modular Agent Architecture
-
-Structured JSON prompting
-
-🔮 Future Roadmap
-
-Multi-agent debate system (DB vs Infra vs Network)
-
-Scoring engine for hypothesis ranking
-
-Real Prometheus metrics integration
-
-Kubernetes remediation execution
-
-Adaptive confidence weighting
-
-Closed-loop autonomous healing
-
+- Multi-agent debate system (DB vs Infra vs Network)  
+- Scoring engine for hypothesis ranking  
+- Real Prometheus metrics integration  
+- Kubernetes remediation execution  
+- Adaptive confidence weighting  
+- Closed-loop autonomous healing  
